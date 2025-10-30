@@ -3,16 +3,15 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: buildozer/buildozer
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Build APK with Buildozer
-      uses: ugglesk/buildozer-action@v1
-      with:
-        work-dir: .
-        buildozer-version: stable
-        
+    - name: Build APK
+      run: |
+        buildozer android debug
+      
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
