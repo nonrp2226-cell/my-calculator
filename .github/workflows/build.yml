@@ -2,41 +2,24 @@ name: Build APK
 on: [push]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-    - name: Cache Buildozer dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.buildozer
-          .buildozer
-        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
-        restore-keys: |
-          ${{ runner.os }}-buildozer-
-    - name: Install system dependencies
+    
+    - name: Setup environment
       run: |
         sudo apt-get update
         sudo apt-get install -y \
-          git zip unzip \
-          openjdk-17-jdk \
-          python3-pip python3-venv \
-          autoconf libtool pkg-config \
-          zlib1g-dev libncurses5-dev libtinfo5 \
-          cmake libffi-dev libssl-dev \
-          ninja-build
-    - name: Install Buildozer
-      run: pip install buildozer cython
+          python3-pip \
+          python3-venv \
+          openjdk-11-jdk \
+          git \
+          zip \
+          unzip
+        
+        pip3 install buildozer
+    
     - name: Build APK
       run: |
+        buildozer init
         buildozer -v android debug
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: android-apk
-        path: bin/*.apk
-        retention-days: 1
