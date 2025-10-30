@@ -4,10 +4,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Build with Buildozer
-      uses: artem-sheremet/buildozer-action@v1
-    - uses: actions/upload-artifact@v2
+      uses: artem-sheremet/buildozer-action@v1.8.0
+      with:
+        work-dir: .
+        buildozer-version: stable
+    - uses: actions/upload-artifact@v3
       with:
         name: package
         path: bin/*.apk
+        retention-days: 1
